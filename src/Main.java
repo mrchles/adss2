@@ -124,6 +124,7 @@ public class Main {
             System.out.println("3 view bills");
             System.out.println("4 process bill");
             System.out.println("5 show accounts");
+            System.out.println("6 show predifined accounts");
             System.out.println("0 back");
             System.out.println("enter: ");
 
@@ -134,6 +135,7 @@ public class Main {
             else if (c == 3) bankSystem.displayBillQueue();
             else if (c == 4) bankSystem.processNextBillPayment();
             else if (c == 5) bankSystem.displayAllAccounts();
+            else if (c == 6) bankSystem.showArray();
             else return;
         }
     }
