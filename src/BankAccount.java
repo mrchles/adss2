@@ -13,8 +13,29 @@ public class BankAccount {
         return username;
     }
 
-    public void display() {
-        System.out.println(username + " balance: " + balance);
+    public double getBalance() {
+        return balance;
     }
 
+    public void deposit(double amount) {
+        if (amount > 0) {
+            balance += amount;
+        }
+    }
+
+    public boolean withdraw(double amount) {
+        if (amount <= 0) {
+            return false;
+        }
+        if (amount > balance) {
+            return false;
+        }
+        balance -= amount;
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "account " + accountNumber + " " + username + " balance " + balance;
+    }
 }

@@ -1,39 +1,148 @@
 import java.util.Scanner;
 
 public class Main {
+    private static final Scanner scanner = new Scanner(System.in);
+    private static final BOperations bankSystem = new BOperations();
 
     public static void main(String[] args) {
 
-        BOperations bank = new BOperations();
-        Scanner sc = new Scanner(System.in);
+        while (true) {
+            System.out.println("main menu");
+            System.out.println("1 enter bank");
+            System.out.println("2 enter atm");
+            System.out.println("3 admin area");
+            System.out.println("4 exit");
+            System.out.println("enter: ");
 
-        System.out.println("task 1");
-        //bank.addAccount(new BankAccount(1, "Miras", 150000));
-        //bank.addAccount(new BankAccount(2, "Ayanokoji", 220000));
-        //bank.addAccount(new BankAccount(2, "Dima", 1000000));
-        for (int i = 0; i < 2; i++) {
-            System.out.print("enter username: ");
-            String name = sc.next();
 
-            System.out.print("enter balance: ");
-            double balance = sc.nextDouble();
+            int choice = readInt();
 
-            bank.addAccount(new BankAccount(i + 1, name, balance));
+            if (choice == 1) bankMenu();
+            else if (choice == 2) atmMenu();
+            else if (choice == 3) adminMenu();
+            else return;
         }
+    }
 
-        System.out.println("accounts list:");
-        bank.showAccounts();
+    private static void bankMenu() {
+        while (true) {
+            System.out.println("bank menu");
+            System.out.println("1 submit account request");
+            System.out.println("2 deposit");
+            System.out.println("3 withdraw");
+            System.out.println("4 add bill");
+            System.out.println("5 add transaction");
+            System.out.println("6 show last transaction");
+            System.out.println("7 undo transaction");
+            System.out.println("8 show accounts");
+            System.out.println("9 search");
+            System.out.println("0 back");
+            System.out.println("enter: ");
 
-        System.out.print("enter username to search: ");
-        String searchName = sc.next();
+            int c = readInt();
 
-        BankAccount found = bank.findByUsername(searchName);
+            if (c == 1) {
+                System.out.print("account number ");
+                int id = readInt();
+                System.out.print("username ");
+                String u = scanner.nextLine();
+                System.out.print("deposit ");
+                double d = readDouble();
+                bankSystem.submitAccountRequest(new AccountRequest(id, u, d));
+            }
 
-        if (found != null) {
-            System.out.println("account found:");
-            found.display();
-        } else {
-            System.out.println("account not found");
+            else if (c == 2) {
+                System.out.print("username ");
+                String u = scanner.nextLine();
+                System.out.print("amount ");
+                double a = readDouble();
+                bankSystem.deposit(u, a);
+            }
+
+            else if (c == 3) {
+                System.out.print("username ");
+                String u = scanner.nextLine();
+                System.out.print("amount ");
+                double a = readDouble();
+                bankSystem.withdraw(u, a);
+            }
+
+            else if (c == 4) {
+                System.out.print("bill name ");
+                bankSystem.addBillPayment(scanner.nextLine());
+            }
+
+            else if (c == 5) {
+                bankSystem.addTransaction(scanner.nextLine());
+            }
+
+            else if (c == 6) bankSystem.showLastTransaction();
+            else if (c == 7) bankSystem.undoLastTransaction();
+            else if (c == 8) bankSystem.displayAllAccounts();
+
+            else if (c == 9) {
+                System.out.print("username ");
+                System.out.println(bankSystem.searchByUsername(scanner.nextLine()));
+            }
+
+            else return;
         }
+    }
+
+    private static void atmMenu() {
+        while (true) {
+            System.out.println("atm menu");
+            System.out.println("1 balance enquiry");
+            System.out.println("2 withdraw");
+            System.out.println("0 back");
+            System.out.println("enter: ");
+
+            int c = readInt();
+
+            if (c == 1) {
+                System.out.print("username ");
+                bankSystem.balanceEnquiry(scanner.nextLine());
+            }
+
+            else if (c == 2) {
+                System.out.print("username ");
+                String u = scanner.nextLine();
+                System.out.print("amount ");
+                double a = readDouble();
+                bankSystem.withdraw(u, a);
+            }
+
+            else return;
+        }
+    }
+
+    private static void adminMenu() {
+        while (true) {
+            System.out.println("admin menu");
+            System.out.println("1 view requests");
+            System.out.println("2 process request");
+            System.out.println("3 view bills");
+            System.out.println("4 process bill");
+            System.out.println("5 show accounts");
+            System.out.println("0 back");
+            System.out.println("enter: ");
+
+            int c = readInt();
+
+            if (c == 1) bankSystem.displayPendingRequests();
+            else if (c == 2) bankSystem.processAccountRequest();
+            else if (c == 3) bankSystem.displayBillQueue();
+            else if (c == 4) bankSystem.processNextBillPayment();
+            else if (c == 5) bankSystem.displayAllAccounts();
+            else return;
+        }
+    }
+
+    private static int readInt() {
+        return Integer.parseInt(scanner.nextLine());
+    }
+
+    private static double readDouble() {
+        return Double.parseDouble(scanner.nextLine());
     }
 }
