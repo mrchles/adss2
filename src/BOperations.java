@@ -1,19 +1,16 @@
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Stack;
 
 public class BOperations {
-    private LinkedList<BankAccount> accounts;
-    private Stack<String> transactionHistory;
-    private Queue<String> billQueue;
-    private Queue<AccountRequest> accountRequests;
+    private AccList accounts;
+    private Stack transactionHistory;
+    private BillQueue billQueue;
+    private BillQueue accountRequests;
     private BankAccount[] fixedAccounts;
 
     public BOperations() {
-        accounts = new LinkedList<>();
-        transactionHistory = new Stack<>();
-        billQueue = new LinkedList<>();
-        accountRequests = new LinkedList<>();
+        accounts = new AccList();
+        transactionHistory = new Stack(100);
+        billQueue = new BillQueue();
+        accountRequests = new BillQueue();
 
         accounts.add(new BankAccount(1001, "miras", 150000));
         accounts.add(new BankAccount(1002, "dima", 220000));
@@ -38,18 +35,11 @@ public class BOperations {
         }
 
         System.out.println("accounts list");
-        for (BankAccount account : accounts) {
-            System.out.println(account);
-        }
+        accounts.display();
     }
 
     public BankAccount searchByUsername(String username) {
-        for (BankAccount account : accounts) {
-            if (account.getUsername().equalsIgnoreCase(username)) {
-                return account;
-            }
-        }
-        return null;
+        return accounts.find(username);
     }
 
     public void deposit(String username, double amount) {
@@ -130,7 +120,7 @@ public class BOperations {
             return;
         }
 
-        String bill = billQueue.poll();
+        String bill = (String) billQueue.poll();
 
         String text = "processed bill " + bill;
         transactionHistory.push(text);
@@ -145,9 +135,7 @@ public class BOperations {
         }
 
         System.out.println("bill queue");
-        for (String b : billQueue) {
-            System.out.println(b);
-        }
+        billQueue.display();
     }
 
     public void submitAccountRequest(AccountRequest request) {
@@ -161,7 +149,7 @@ public class BOperations {
             return;
         }
 
-        AccountRequest request = accountRequests.poll();
+        AccountRequest request = (AccountRequest) accountRequests.poll();
 
         BankAccount newAccount = new BankAccount(
                 request.getAccountNumber(),
@@ -182,9 +170,7 @@ public class BOperations {
         }
 
         System.out.println("pending account requests");
-        for (AccountRequest request : accountRequests) {
-            System.out.println(request);
-        }
+        accountRequests.display();
     }
 
     public void balanceEnquiry(String username) {
